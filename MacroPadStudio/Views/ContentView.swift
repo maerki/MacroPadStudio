@@ -18,29 +18,6 @@ struct ContentView: View {
             ToolbarItem(placement: .navigation) {
                 DeviceMenu()
             }
-            ToolbarItemGroup(placement: .primaryAction) {
-                Button {
-                    model.readFromDevice()
-                } label: {
-                    if model.isReadingConfiguration {
-                        ProgressView()
-                            .controlSize(.small)
-                    } else {
-                        Label("Read from Device", systemImage: "arrow.down.to.line")
-                    }
-                }
-                .disabled(!model.canReadFromDevice)
-                .help(model.isReadingConfiguration ? "Reading configuration…" : "Read control assignments from the keypad")
-
-                Button {
-                    model.requestApply()
-                } label: {
-                    Label("Apply to Device", systemImage: "arrow.up.to.line")
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(!model.canApply)
-                .help(applyHelp)
-            }
         }
         .sheet(isPresented: $model.showingApplyReview) {
             ApplyReviewView()
@@ -62,11 +39,6 @@ struct ContentView: View {
         .animation(.snappy, value: model.notice)
     }
 
-    private var applyHelp: String {
-        if model.canApply { return "Review and apply \(model.changeCount) changes" }
-        if model.changeCount > 0 { return "Connect the keypad over USB to apply changes" }
-        return "No changes to apply"
-    }
 }
 
 private struct DeviceMenu: View {

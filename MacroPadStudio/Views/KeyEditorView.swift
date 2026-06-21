@@ -5,11 +5,17 @@ struct KeyEditorView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 28) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(model.selectedControl.title)
-                    .font(.largeTitle.weight(.semibold))
-                Text(model.activeLayer.name)
-                    .foregroundStyle(.secondary)
+            HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(model.selectedControl.title)
+                        .font(.largeTitle.weight(.semibold))
+                    Text(model.activeLayer.name)
+                        .foregroundStyle(.secondary)
+                }
+
+                Spacer()
+
+                DeviceActionButtons()
             }
 
             if let knobNumber = model.selectedControl.knobNumber {
@@ -87,6 +93,85 @@ struct KeyEditorView: View {
         Binding(get: { model.selectedBinding.mouseAction }, set: { value in
             model.updateSelectedBinding { $0.mouseAction = value }
         })
+    }
+}
+
+private struct DeviceActionButtons: View {
+    @EnvironmentObject private var model: AppModel
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Button {
+                model.readFromDevice()
+            } label: {
+                if model.isReadingConfiguration {
+                    ProgressView()
+                        .controlSize(.small)
+                        .frame(width: 17, height: 17)
+                } else {
+                    Image(systemName: "arrow.down.to.line")
+                        .font(.system(size: 17, weight: .medium))
+                }
+            }
+            .buttonStyle(DeviceActionButtonStyle(kind: .secondary))
+            .disabled(!model.canReadFromDevice)
+            .help(model.isReadingConfiguration ? "Reading configuration..." : "Read control assignments from the keypad")
+            .accessibilityLabel("Read from Device")
+
+            Button {
+                model.requestApply()
+            } label: {
+                Image(systemName: "arrow.up.to.line")
+                    .font(.system(size: 17, weight: .medium))
+            }
+            .buttonStyle(DeviceActionButtonStyle(kind: .primary))
+            .disabled(!model.canApply)
+            .help(applyHelp)
+            .accessibilityLabel("Apply to Device")
+        }
+    }
+
+    private var applyHelp: String {
+        if model.canApply { return "Review and apply \(model.changeCount) changes" }
+        if model.changeCount > 0 { return "Connect the keypad over USB to apply changes" }
+        return "No changes to apply"
+    }
+}
+
+private struct DeviceActionButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
+    enum Kind {
+        case primary
+        case secondary
+    }
+
+    let kind: Kind
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(width: 34, height: 34)
+            .foregroundStyle(foregroundColor)
+            .background(backgroundColor(for: configuration), in: Circle())
+            .opacity(isEnabled ? (configuration.isPressed ? 0.72 : 1) : 0.45)
+    }
+
+    private var foregroundColor: Color {
+        switch kind {
+        case .primary: .white
+        case .secondary: .primary
+        }
+    }
+
+    private func backgroundColor(for configuration: Configuration) -> Color {
+        switch kind {
+        case .primary:
+            configuration.isPressed ? Color.accentColor.opacity(0.82) : Color.accentColor
+        case .secondary:
+            configuration.isPressed
+                ? Color(nsColor: .controlAccentColor).opacity(0.18)
+                : Color(nsColor: .controlBackgroundColor)
+        }
     }
 }
 

@@ -1,0 +1,54 @@
+name: MacroPadStudio
+options:
+  bundleIdPrefix: ch.maerki
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "26.0"
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEAD_CODE_STRIPPING: YES
+    ENABLE_HARDENED_RUNTIME: YES
+    CODE_SIGN_STYLE: Automatic
+targets:
+  MacroPadStudio:
+    type: application
+    platform: macOS
+    sources:
+      - path: MacroPadStudio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ch.maerki.MacroPadStudio
+        PRODUCT_NAME: MacroPadStudio
+        PRODUCT_MODULE_NAME: MacroPadStudio
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: MacroPad Studio
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities
+        INFOPLIST_KEY_NSHumanReadableCopyright: "Copyright 2026 MacroPad Studio contributors"
+        INFOPLIST_KEY_NSPrincipalClass: NSApplication
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
+        CODE_SIGN_IDENTITY: "-"
+    dependencies: []
+  MacroPadStudioTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: MacroPadStudioTests
+    dependencies:
+      - target: MacroPadStudio
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: ch.maerki.MacroPadStudioTests
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  MacroPadStudio:
+    build:
+      targets:
+        MacroPadStudio: all
+        MacroPadStudioTests: [test]
+    test:
+      targets:
+        - MacroPadStudioTests

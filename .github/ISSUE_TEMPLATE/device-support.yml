@@ -1,0 +1,49 @@
+name: Device support request
+description: Propose investigation of an exact macro-pad variant
+title: "Device: "
+labels: [device-support]
+body:
+  - type: input
+    id: ids
+    attributes:
+      label: USB VID:PID
+      placeholder: "1189:8840"
+    validations:
+      required: true
+  - type: input
+    id: layout
+    attributes:
+      label: Physical layout
+      placeholder: 3 keys, 1 knob, 3 layers
+    validations:
+      required: true
+  - type: textarea
+    id: metadata
+    attributes:
+      label: USB interface metadata
+      description: Include interface number, usage page, report ID, and report sizes when available.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Read-only evidence and protocol provenance
+      description: Do not experiment with undocumented write, firmware, or bootloader reports.
+    validations:
+      required: true
+  - type: dropdown
+    id: hardware
+    attributes:
+      label: Physical device available for validation
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety acknowledgement
+      options:
+        - label: Investigation will begin read-only and exact-device scoped.
+          required: true

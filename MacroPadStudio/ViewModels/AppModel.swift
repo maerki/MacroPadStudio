@@ -260,8 +260,6 @@ final class AppModel: ObservableObject {
         updateSelectedBinding { $0 = ControlBinding.defaultShortcut }
     }
 
-    func dismissNotice() { notice = nil }
-
     private func handleConnection(_ device: ConnectedHIDDevice?) {
         let nextProfile: DeviceProfile
         if let device {

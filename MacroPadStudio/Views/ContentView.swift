@@ -29,13 +29,6 @@ struct ContentView: View {
         } message: {
             Text("This replaces all local key and knob assignments with the values stored on the keypad. Layer names and lighting remain unchanged because the device does not return lighting data.")
         }
-        .overlay(alignment: .top) {
-            if let notice = model.notice {
-                NoticeView(notice: notice) { model.dismissNotice() }
-                    .padding(.top, 12)
-                    .transition(.move(edge: .top).combined(with: .opacity))
-            }
-        }
         .animation(.snappy, value: model.notice)
     }
 
@@ -88,6 +81,10 @@ private struct StatusBarView: View {
                 Label(changeLabel, systemImage: "circle.fill")
                     .symbolRenderingMode(.monochrome)
                     .foregroundStyle(.orange)
+            } else if let notice = model.notice {
+                Label(notice.message, systemImage: noticeSymbol(for: notice.kind))
+                    .foregroundStyle(noticeColor(for: notice.kind))
+                    .lineLimit(1)
             } else {
                 Label("Up to date", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
@@ -110,40 +107,20 @@ private struct StatusBarView: View {
         let base = "\(model.changeCount) unsaved \(model.changeCount == 1 ? "change" : "changes")"
         return model.isHardwareConnected && !model.canWriteToDevice ? "\(base) • USB required" : base
     }
-}
 
-private struct NoticeView: View {
-    let notice: AppModel.Notice
-    let dismiss: () -> Void
-
-    var color: Color {
-        switch notice.kind {
+    private func noticeColor(for kind: AppModel.Notice.Kind) -> Color {
+        switch kind {
         case .success: .green
         case .warning: .orange
         case .error: .red
         }
     }
 
-    var symbol: String {
-        switch notice.kind {
+    private func noticeSymbol(for kind: AppModel.Notice.Kind) -> String {
+        switch kind {
         case .success: "checkmark.circle.fill"
         case .warning: "exclamationmark.triangle.fill"
         case .error: "xmark.octagon.fill"
         }
-    }
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: symbol).foregroundStyle(color)
-            Text(notice.message)
-            Button(action: dismiss) { Image(systemName: "xmark") }
-                .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
-        }
-        .font(.callout)
-        .padding(.horizontal, 14)
-        .padding(.vertical, 10)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 10))
-        .shadow(color: .black.opacity(0.14), radius: 12, y: 4)
     }
 }

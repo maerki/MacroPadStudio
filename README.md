@@ -5,6 +5,8 @@ USB macro keypads sold as `MINI_KEYBOARD`. It provides a focused editor,
 device configuration reading, and an explicit review step before every
 hardware write.
 
+![MacroPad Studio editor showing a three-key, one-knob MINI_KEYBOARD configuration](docs/images/macropad-studio-editor.png)
+
 > [!WARNING]
 > MacroPad Studio writes configuration reports to USB HID hardware. Device
 > variants can share a product name while using different protocols. Only use

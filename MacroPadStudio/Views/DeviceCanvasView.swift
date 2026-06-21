@@ -100,11 +100,14 @@ private struct LayerPicker: View {
                 set: { model.selectLayer($0) }
             )) {
                 ForEach(model.configuration.layers) { layer in
-                    Text("\(layer.id + 1)").tag(layer.id)
+                    Text("Layer \(layer.id + 1)")
+                        .tag(layer.id)
                 }
             }
             .labelsHidden()
             .pickerStyle(.segmented)
+            .controlSize(.large)
+            .frame(minHeight: 34)
             .frame(maxWidth: .infinity)
             .accessibilityLabel("Active layer")
         }

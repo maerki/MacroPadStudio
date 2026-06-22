@@ -29,15 +29,6 @@ struct DeviceCanvasView: View {
 
             Spacer(minLength: 0)
 
-            HStack(spacing: 8) {
-                Image(systemName: "hand.tap")
-                Text("Select a key or knob to edit it")
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 22)
-
             LayerLightingPanel()
                 .padding(.horizontal, 22)
                 .padding(.bottom, 20)
@@ -91,26 +82,56 @@ private struct LayerPicker: View {
     @EnvironmentObject private var model: AppModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 7) {
-            Text("Layer")
-                .font(.caption)
-                .foregroundStyle(.secondary)
-            Picker("Layer", selection: Binding(
-                get: { model.activeLayerIndex },
-                set: { model.selectLayer($0) }
-            )) {
-                ForEach(model.configuration.layers) { layer in
-                    Text("Layer \(layer.id + 1)")
-                        .tag(layer.id)
+        HStack(spacing: 4) {
+            ForEach(model.configuration.layers) { layer in
+                LayerSegmentButton(
+                    title: "Layer \(layer.id + 1)",
+                    isSelected: model.activeLayerIndex == layer.id
+                ) {
+                    model.selectLayer(layer.id)
                 }
             }
-            .labelsHidden()
-            .pickerStyle(.segmented)
-            .controlSize(.large)
-            .frame(minHeight: 34)
-            .frame(maxWidth: .infinity)
-            .accessibilityLabel("Active layer")
         }
+        .padding(5)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(Color(nsColor: .controlBackgroundColor))
+                .shadow(color: .black.opacity(0.08), radius: 12, y: 6)
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .stroke(Color.primary.opacity(0.06), lineWidth: 1)
+        )
+        .accessibilityLabel("Active layer")
+        .animation(.snappy, value: model.activeLayerIndex)
+    }
+}
+
+private struct LayerSegmentButton: View {
+    let title: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.headline)
+                .fontWeight(isSelected ? .semibold : .medium)
+                .foregroundStyle(isSelected ? .white : .primary)
+                .frame(maxWidth: .infinity, minHeight: 42)
+                .contentShape(RoundedRectangle(cornerRadius: 17, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .background {
+            if isSelected {
+                RoundedRectangle(cornerRadius: 17, style: .continuous)
+                    .fill(Color.accentColor)
+                    .shadow(color: Color.accentColor.opacity(0.24), radius: 8, y: 3)
+            }
+        }
+        .accessibilityLabel(title)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 }
 

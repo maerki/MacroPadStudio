@@ -17,6 +17,7 @@
 		6E28DFBF5A0145BE548DB56A /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77995E033A9ADC681A64B15F /* InspectorView.swift */; };
 		72B466AAF3BFA834E098F134 /* ConfigurationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FEAC8C6BE04058B35C9B30 /* ConfigurationStoreTests.swift */; };
 		77828B4039CC98A370E21157 /* DeviceCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FB5C5F51299F19CF9F885F /* DeviceCanvasView.swift */; };
+		7A623176ED8BF1609399A65A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 853B681E8D2BB8510E32D5EE /* Assets.xcassets */; };
 		86F0D4ED33F5D82C90124B64 /* KeystrokeRecorderField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670C44B875055CDC1AC60ADD /* KeystrokeRecorderField.swift */; };
 		8BE0AC62131B9A9C60D49AA0 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C553015B8FD0F45578ADF968 /* AppModel.swift */; };
 		8C9D3BFB645094D7F2715BC9 /* VisualSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4904B89CC09CFBB4EBE8CD11 /* VisualSnapshotTests.swift */; };
@@ -47,6 +48,7 @@
 		642F0738BD8E8309E618DDAA /* MacroPadProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroPadProtocolTests.swift; sourceTree = "<group>"; };
 		670C44B875055CDC1AC60ADD /* KeystrokeRecorderField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeystrokeRecorderField.swift; sourceTree = "<group>"; };
 		77995E033A9ADC681A64B15F /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
+		853B681E8D2BB8510E32D5EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		89B3E93095FD6F45FE4FBB23 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		96FB5C5F51299F19CF9F885F /* DeviceCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCanvasView.swift; sourceTree = "<group>"; };
 		A1FA39EBA6FE4A0070BEEC14 /* HardwareWriteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareWriteTests.swift; sourceTree = "<group>"; };
@@ -109,12 +111,21 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		5C5158C730C616EACA2B1804 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				853B681E8D2BB8510E32D5EE /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		78577671CEFBA0E9F15CF6AB /* MacroPadStudio */ = {
 			isa = PBXGroup;
 			children = (
 				B1F51C9F3C88D82902E1E1A3 /* App */,
 				82F0E9A97C133469D7C7A6CC /* Models */,
 				27F88F16C74FB0C352525C90 /* Protocol */,
+				5C5158C730C616EACA2B1804 /* Resources */,
 				F7932DCC550E96FBE59FA27D /* Services */,
 				48283990A2CEC5C116AD4BF4 /* ViewModels */,
 				0759CA53CCF9F6B329AE7B00 /* Views */,
@@ -182,6 +193,7 @@
 			buildConfigurationList = 8F41C846103F400F39C554B7 /* Build configuration list for PBXNativeTarget "MacroPadStudio" */;
 			buildPhases = (
 				10C1FA026142C70F1730A846 /* Sources */,
+				11F216DAAAE24057FC0E4D8A /* Resources */,
 			);
 			buildRules = (
 			);
@@ -230,6 +242,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11F216DAAAE24057FC0E4D8A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A623176ED8BF1609399A65A /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		10C1FA026142C70F1730A846 /* Sources */ = {

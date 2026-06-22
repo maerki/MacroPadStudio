@@ -41,7 +41,8 @@ struct KeyEditorView: View {
             actionEditor
             Spacer(minLength: 0)
         }
-        .padding(30)
+        .padding(.horizontal, 30)
+        .padding(.bottom, 30)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(nsColor: .windowBackgroundColor))
     }

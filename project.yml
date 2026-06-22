@@ -24,6 +24,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: ch.maerki.MacroPadStudio
         PRODUCT_NAME: MacroPadStudio
         PRODUCT_MODULE_NAME: MacroPadStudio
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: MacroPad Studio
         INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.utilities

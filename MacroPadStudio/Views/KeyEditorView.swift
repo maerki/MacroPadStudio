@@ -4,47 +4,63 @@ struct KeyEditorView: View {
     @EnvironmentObject private var model: AppModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 28) {
-            HStack(alignment: .top, spacing: 16) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(model.selectedControl.title)
-                        .font(.largeTitle.weight(.semibold))
-                    Text(model.activeLayer.name)
-                        .foregroundStyle(.secondary)
-                }
+        VStack(alignment: .leading, spacing: 0) {
+            titleBar
 
-                Spacer()
-
-                DeviceActionButtons()
-            }
-
-            if let knobNumber = model.selectedControl.knobNumber {
-                KnobActionSelector(number: knobNumber)
-            }
-
-            BehaviorSummary()
-
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Action Type")
-                    .font(.headline)
-                HStack(spacing: 6) {
-                    ForEach(ActionKind.allCases) { kind in
-                        ActionTypeButton(kind: kind, selected: model.selectedBinding.kind == kind) {
-                            model.updateSelectedBinding { $0.kind = kind }
-                        }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 28) {
+                    if let knobNumber = model.selectedControl.knobNumber {
+                        KnobActionSelector(number: knobNumber)
                     }
-                }
-                .padding(4)
-                .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
-            }
 
-            actionEditor
-            Spacer(minLength: 0)
+                    BehaviorSummary()
+                    actionTypePicker
+                    actionEditor
+                }
+                .padding(.horizontal, 30)
+                .padding(.top, 22)
+                .padding(.bottom, 30)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
-        .padding(.horizontal, 30)
-        .padding(.bottom, 30)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .background(Color(nsColor: .windowBackgroundColor))
+    }
+
+    private var titleBar: some View {
+        HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(model.selectedControl.title)
+                    .font(.largeTitle.weight(.semibold))
+                Text(model.activeLayer.name)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            DeviceActionButtons()
+        }
+        .padding(.horizontal, 30)
+        .padding(.top, 20)
+        .padding(.bottom, 18)
+        .frame(maxWidth: .infinity, alignment: .topLeading)
+    }
+
+    private var actionTypePicker: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Action Type")
+                .font(.headline)
+            HStack(spacing: 6) {
+                ForEach(ActionKind.allCases) { kind in
+                    ActionTypeButton(kind: kind, selected: model.selectedBinding.kind == kind) {
+                        model.updateSelectedBinding { $0.kind = kind }
+                    }
+                }
+            }
+            .padding(4)
+            .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
+        }
     }
 
     @ViewBuilder
@@ -257,6 +273,8 @@ private struct ActionTypeButton: View {
 
 private struct MacroSequenceEditor: View {
     @EnvironmentObject private var model: AppModel
+    private let rowHeight: CGFloat = 58
+    private let maximumVisibleRows: CGFloat = 5
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -272,25 +290,22 @@ private struct MacroSequenceEditor: View {
                 .disabled(model.selectedBinding.sequence.count >= model.profile.maxSequenceLength)
             }
 
-            VStack(spacing: 0) {
-                ForEach(Array(model.selectedBinding.sequence.enumerated()), id: \.element.id) { index, stroke in
-                    KeystrokeRow(index: index, stroke: stroke)
-                    if index + 1 < model.selectedBinding.sequence.count { Divider() }
-                }
+            Group {
                 if model.selectedBinding.sequence.isEmpty {
-                    VStack(spacing: 8) {
-                        Image(systemName: "keyboard.badge.ellipsis")
-                            .font(.title)
-                            .foregroundStyle(.secondary)
-                        Text("No keystrokes")
-                            .fontWeight(.medium)
-                        Text("Add a keystroke to make this control active.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                    emptyState
+                } else {
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            ForEach(Array(model.selectedBinding.sequence.enumerated()), id: \.element.id) { index, stroke in
+                                KeystrokeRow(index: index, stroke: stroke)
+                                if index + 1 < model.selectedBinding.sequence.count { Divider() }
+                            }
+                        }
                     }
-                    .frame(maxWidth: .infinity, minHeight: 140)
+                    .frame(height: sequenceListHeight)
                 }
             }
+            .frame(maxWidth: .infinity)
             .background(Color(nsColor: .controlBackgroundColor).opacity(0.55), in: RoundedRectangle(cornerRadius: 10))
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(.separator.opacity(0.45)))
 
@@ -310,6 +325,24 @@ private struct MacroSequenceEditor: View {
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private var emptyState: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "keyboard.badge.ellipsis")
+                .font(.title)
+                .foregroundStyle(.secondary)
+            Text("No keystrokes")
+                .fontWeight(.medium)
+            Text("Add a keystroke to make this control active.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 140)
+    }
+
+    private var sequenceListHeight: CGFloat {
+        min(CGFloat(model.selectedBinding.sequence.count) * rowHeight, maximumVisibleRows * rowHeight)
     }
 
     private var delayBinding: Binding<UInt16> {

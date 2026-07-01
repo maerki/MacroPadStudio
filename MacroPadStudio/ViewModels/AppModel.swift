@@ -92,6 +92,13 @@ final class AppModel: ObservableObject {
         }
     }
 
+    var isBluetoothReadOnly: Bool {
+        switch mode {
+        case .demo: false
+        case .hardware(let device): device.isBluetoothReadOnly
+        }
+    }
+
     var canReadFromDevice: Bool {
         guard !isReadingConfiguration else { return false }
         guard case .hardware(let device) = mode else { return true }
@@ -180,7 +187,7 @@ final class AppModel: ObservableObject {
 
         guard case .hardware(let connected) = mode else { return }
         guard connected.isConfigurable else {
-            notice = Notice(kind: .warning, message: "Connect the keypad over USB before applying changes.")
+            notice = Notice(kind: .warning, message: "This connection cannot apply changes.")
             return
         }
         do {

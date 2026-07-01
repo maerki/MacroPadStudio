@@ -27,6 +27,10 @@ final class HardwareWriteTests: XCTestCase {
             XCTFail("The supported USB configuration interface was not detected.")
             return
         }
+        guard connected.access == .writableUSB else {
+            XCTFail("The WSD hardware write token is only valid for the supported USB configuration interface.")
+            return
+        }
 
         let currentReports = try await service.readConfigurationReports()
         model.configuration = try MacroPadProtocolDecoder.applying(
@@ -105,6 +109,7 @@ final class HardwareWriteTests: XCTestCase {
         }
 
         let connected = try XCTUnwrap(service.connectedDevice)
+        XCTAssertEqual(connected.access, .writableUSB)
         XCTAssertEqual(connected.profile, .miniKeyboardExtended)
         XCTAssertEqual(connected.reportID, 3)
 
@@ -187,6 +192,7 @@ final class HardwareWriteTests: XCTestCase {
             XCTFail("The supported USB configuration interface was not detected.")
             return
         }
+        XCTAssertEqual(device.access, .writableUSB)
         XCTAssertEqual(device.profile.productID, 0x8840)
         XCTAssertEqual(device.profile.interfaceNumber, 0)
         XCTAssertEqual(device.reportID, 3)

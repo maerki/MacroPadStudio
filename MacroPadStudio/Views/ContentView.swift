@@ -98,14 +98,14 @@ private struct StatusBarView: View {
     }
 
     private var statusTitle: String {
-        if model.canWriteToDevice { return "USB configuration ready" }
+        if model.canWriteToDevice { return "Configuration ready" }
         if model.isHardwareConnected { return "Bluetooth device detected" }
         return "Demo mode"
     }
 
     private var changeLabel: String {
         let base = "\(model.changeCount) unsaved \(model.changeCount == 1 ? "change" : "changes")"
-        return model.isHardwareConnected && !model.canWriteToDevice ? "\(base) • USB required" : base
+        return model.isHardwareConnected && !model.canWriteToDevice ? "\(base) • Cannot apply" : base
     }
 
     private func noticeColor(for kind: AppModel.Notice.Kind) -> Color {

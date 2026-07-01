@@ -14,7 +14,18 @@ struct ConnectedHIDDevice: Equatable, Sendable {
     let access: Access
     let transport: String
 
-    var isConfigurable: Bool { access == .writableUSB }
+    var isConfigurable: Bool {
+        switch access {
+        case .writableUSB:
+            true
+        case .bluetoothReadOnly:
+            false
+        }
+    }
+
+    var isBluetoothReadOnly: Bool {
+        access == .bluetoothReadOnly
+    }
 }
 
 enum HIDServiceError: LocalizedError {
@@ -45,7 +56,7 @@ final class HIDDeviceService {
 
     private var manager: IOHIDManager?
     private var device: IOHIDDevice?
-    private var observedBluetoothDevice: IOHIDDevice?
+    private var bluetoothDevice: IOHIDDevice?
     private(set) var connectedDevice: ConnectedHIDDevice?
     private let discoveryEnabled: Bool
 
@@ -89,7 +100,7 @@ final class HIDDeviceService {
         IOHIDManagerClose(manager, IOOptionBits(kIOHIDOptionsTypeNone))
         self.manager = nil
         device = nil
-        observedBluetoothDevice = nil
+        bluetoothDevice = nil
         connectedDevice = nil
     }
 
@@ -124,12 +135,13 @@ final class HIDDeviceService {
         let transport = stringProperty(kIOHIDTransportKey, on: candidate) ?? "Unknown"
 
         if name == "MINI_KEYBOARD", transport.localizedCaseInsensitiveContains("Bluetooth") {
-            guard device == nil, observedBluetoothDevice == nil else { return }
-            observedBluetoothDevice = candidate
+            guard device == nil, bluetoothDevice == nil else { return }
+            bluetoothDevice = candidate
+            device = candidate
             let connection = ConnectedHIDDevice(
-                profile: .legacyMini,
+                profile: .miniKeyboardExtended,
                 productName: name,
-                reportID: 0,
+                reportID: 3,
                 access: .bluetoothReadOnly,
                 transport: transport
             )
@@ -164,26 +176,28 @@ final class HIDDeviceService {
     }
 
     private func didRemove(_ removed: IOHIDDevice) {
-        if let device, device === removed {
+        if let bluetoothDevice, bluetoothDevice === removed {
+            self.bluetoothDevice = nil
+            if let device, device === removed {
+                self.device = nil
+                connectedDevice = nil
+                onConnectionChanged?(nil)
+            }
+        } else if let device, device === removed {
             IOHIDDeviceClose(device, IOOptionBits(kIOHIDOptionsTypeNone))
             self.device = nil
-            if observedBluetoothDevice != nil {
+            if let bluetoothDevice {
+                self.device = bluetoothDevice
                 let connection = ConnectedHIDDevice(
-                    profile: .legacyMini,
+                    profile: .miniKeyboardExtended,
                     productName: "MINI_KEYBOARD",
-                    reportID: 0,
+                    reportID: 3,
                     access: .bluetoothReadOnly,
                     transport: "Bluetooth Low Energy"
                 )
                 connectedDevice = connection
                 onConnectionChanged?(connection)
             } else {
-                connectedDevice = nil
-                onConnectionChanged?(nil)
-            }
-        } else if let observedBluetoothDevice, observedBluetoothDevice === removed {
-            self.observedBluetoothDevice = nil
-            if device == nil {
                 connectedDevice = nil
                 onConnectionChanged?(nil)
             }

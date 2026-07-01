@@ -150,7 +150,7 @@ private struct DeviceActionButtons: View {
 
     private var applyHelp: String {
         if model.canApply { return "Review and apply \(model.changeCount) changes" }
-        if model.changeCount > 0 { return "Connect the keypad over USB to apply changes" }
+        if model.changeCount > 0 { return "This connection cannot apply changes" }
         return "No changes to apply"
     }
 }

@@ -72,7 +72,10 @@ open MacroPadStudio.xcodeproj
 5. Review every pending change before applying it to the keypad.
 
 Bluetooth discovery is read-only. Configuration reading and writing require
-the validated USB configuration interface.
+the validated USB configuration interface. On the observed BLE
+`MINI_KEYBOARD`, macOS exposes only the standard keyboard/mouse/consumer HID
+endpoint (`1452:022C`, max output report size 2), not the 65-byte vendor
+configuration reports used over USB.
 
 ## Safety model
 

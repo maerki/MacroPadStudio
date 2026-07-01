@@ -15,7 +15,7 @@ struct DeviceCanvasView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Image(systemName: model.canWriteToDevice ? "cable.connector" : (model.isHardwareConnected ? "antenna.radiowaves.left.and.right" : "play.rectangle"))
+                Image(systemName: connectionSymbol)
                     .foregroundStyle(model.canWriteToDevice ? .green : .secondary)
             }
             .padding(.horizontal, 22)
@@ -35,6 +35,13 @@ struct DeviceCanvasView: View {
         }
         .padding(.top, 20)
         .background(Color(nsColor: .controlBackgroundColor).opacity(0.45))
+    }
+
+    private var connectionSymbol: String {
+        if model.isBluetoothReadOnly { return "antenna.radiowaves.left.and.right" }
+        if model.canWriteToDevice { return "cable.connector" }
+        if model.isHardwareConnected { return "antenna.radiowaves.left.and.right" }
+        return "play.rectangle"
     }
 
     @ViewBuilder

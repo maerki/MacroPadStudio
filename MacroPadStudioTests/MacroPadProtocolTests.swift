@@ -103,6 +103,19 @@ final class MacroPadProtocolTests: XCTestCase {
         XCTAssertEqual(DeviceProfile.miniKeyboardExtended.deviceProtocol, .extended)
     }
 
+    func testBluetoothMiniKeyboardIsReadOnlyUntilAConfigurationInterfaceIsVerified() {
+        let device = ConnectedHIDDevice(
+            profile: .miniKeyboardExtended,
+            productName: "MINI_KEYBOARD",
+            reportID: 3,
+            access: .bluetoothReadOnly,
+            transport: "Bluetooth Low Energy"
+        )
+
+        XCTAssertFalse(device.isConfigurable)
+        XCTAssertTrue(device.isBluetoothReadOnly)
+    }
+
     func testKnobControlsExposeTheirPhysicalKnobNumber() {
         XCTAssertNil(PadControlID.key(1).knobNumber)
         XCTAssertEqual(PadControlID.knobLeft(2).knobNumber, 2)

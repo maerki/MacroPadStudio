@@ -1,9 +1,14 @@
 # MacroPad Studio
 
 MacroPad Studio is a native SwiftUI macOS configuration app for inexpensive
-USB macro keypads sold as `MINI_KEYBOARD`. It provides a focused editor,
-device configuration reading, and an explicit review step before every
-hardware write.
+USB mini macro keypads sold as `MINI_KEYBOARD`, including the verified
+3-key, 1-knob Fydun USB Mini Keypad listing below. It is intended for people
+who bought a small programmable macro keyboard, macro pad, shortcut keypad, or
+OSU-style volume-control keyboard and need a macOS editor instead of the
+vendor Windows tool.
+
+The app provides a focused editor, device configuration reading, automatic USB
+sync, and an explicit review step before every hardware write.
 
 ![MacroPad Studio editor showing a three-key, one-knob MINI_KEYBOARD configuration](docs/images/macropad-studio-editor.png)
 
@@ -17,12 +22,37 @@ hardware write.
 MacroPad Studio is pre-release software. The following hardware has been
 physically validated:
 
-| USB VID:PID | Layout | Read | Write | Notes |
+| USB VID:PID | Layout | Read | Write | Known listing and search terms |
 | --- | --- | --- | --- | --- |
-| `1189:8840` | 3 keys, 1 knob, 3 layers | Yes | Yes | Report ID 3; 65-byte vendor reports |
+| `1189:8840` | 3 keys, 1 knob, 3 layers | Yes | Yes | Fydun `B0D8LCKGFL`, model `Fyduncmo5xut2nb-11`; sold as "Red Switch Macro Keyboard Plug and Play Ergonomic Customized Knobs USB Mini Keypad for Desktop, Professional Accessories (3 Keys 1 Knob)" |
 
 Other profiles in the source describe known device families but remain
 experimental until tested on matching physical hardware.
+
+## Supported keyboards
+
+The verified hardware is a generic `MINI_KEYBOARD` USB HID device. The same
+physical-looking keyboard is sold under different names, so the product title
+alone is not enough to prove support.
+
+Known supported purchase listing:
+
+- [Fydun Red Switch Macro Keyboard / USB Mini Keypad, 3 Keys 1 Knob, ASIN `B0D8LCKGFL`](https://www.amazon.ca/dp/B0D8LCKGFL)
+
+Search phrases that may describe the same kind of device:
+
+- `MINI_KEYBOARD`
+- `Fydun 3 Keys 1 Knob`
+- `Fyduncmo5xut2nb-11`
+- `B0D8LCKGFL`
+- `USB Mini Keypad 3 Keys 1 Knob`
+- `Red Switch Macro Keyboard`
+- `Customized Knobs USB Mini Keypad`
+- `programmable mini macro keyboard with knob`
+- `OSU volume control custom shortcut key mini keyboard`
+
+Before writing to hardware, confirm that macOS reports USB VID:PID
+`1189:8840` and that the physical layout is exactly 3 keys plus 1 knob.
 
 ## Features
 
@@ -99,11 +129,11 @@ configuration reports used over USB.
 ```
 
 This creates an ad-hoc-signed archive at
-`outputs/MacroPad-Studio-macOS.zip` plus a SHA-256 checksum. Version `0.1.0`
-is distributed as an explicitly marked, non-notarized pre-release build and
-may be blocked by Gatekeeper. A normal public release requires a Developer ID
-signature and Apple notarization through `./Scripts/package-notarized.sh`;
-see [Releasing](docs/RELEASING.md).
+`outputs/MacroPad-Studio-macOS.zip` plus a SHA-256 checksum.
+
+Public releases are built with a Developer ID signature and Apple
+notarization through `./Scripts/package-notarized.sh`; see
+[Releasing](docs/RELEASING.md).
 
 ## Project structure
 

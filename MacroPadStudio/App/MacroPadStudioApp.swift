@@ -13,8 +13,14 @@ struct MacroPadStudioApp: App {
         .windowStyle(.hiddenTitleBar)
         .defaultSize(width: 1_360, height: 860)
         .commands {
-            CommandGroup(after: .saveItem) {
-                Button("Apply Changes to Device") {
+            CommandMenu("Device") {
+                Button("Load Configuration from Device") {
+                    model.readFromDevice()
+                }
+                .keyboardShortcut("r", modifiers: [.command, .shift])
+                .disabled(!model.canReadFromDevice)
+
+                Button("Store Pending Changes to Device") {
                     model.requestApply()
                 }
                 .keyboardShortcut("s", modifiers: [.command, .shift])

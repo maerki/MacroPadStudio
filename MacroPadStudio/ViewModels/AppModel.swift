@@ -34,6 +34,7 @@ final class AppModel: ObservableObject {
     @Published var showingApplyReview = false
     @Published var showingReadReview = false
     @Published private(set) var isReadingConfiguration = false
+    @Published private(set) var isWritingConfiguration = false
     @Published var notice: Notice?
     @Published var developerMode = false
 
@@ -101,6 +102,7 @@ final class AppModel: ObservableObject {
 
     var canReadFromDevice: Bool {
         guard !isReadingConfiguration else { return false }
+        guard !isWritingConfiguration else { return false }
         guard case .hardware(let device) = mode else { return true }
         return device.isConfigurable && device.profile == .miniKeyboardExtended && device.reportID == 3
     }
@@ -116,6 +118,7 @@ final class AppModel: ObservableObject {
     var canApply: Bool {
         let hasChanges = !dirtyControls.isEmpty || !dirtyLightingLayers.isEmpty
         guard !isReadingConfiguration else { return false }
+        guard !isWritingConfiguration else { return false }
         return switch mode {
         case .demo: hasChanges
         case .hardware(let device): hasChanges && device.isConfigurable
@@ -136,6 +139,7 @@ final class AppModel: ObservableObject {
         configuration.layers[activeLayerIndex].bindings[selectedControl] = binding
         dirtyControls.insert(BindingLocation(layer: activeLayerIndex, control: selectedControl))
         persistDraft()
+        syncPendingChangesIfNeeded()
     }
 
     func updateLighting(_ mutate: (inout LayerLighting) -> Void) {
@@ -143,6 +147,7 @@ final class AppModel: ObservableObject {
         mutate(&configuration.layers[activeLayerIndex].lighting)
         dirtyLightingLayers.insert(activeLayerIndex)
         persistDraft()
+        syncPendingChangesIfNeeded()
     }
 
     func addKeystroke(key: HIDKey = .returnKey, modifiers: HIDModifier = []) {
@@ -177,6 +182,15 @@ final class AppModel: ObservableObject {
 
     func applyChanges() {
         showingApplyReview = false
+        writePendingChanges(source: .manual)
+    }
+
+    private enum WriteSource {
+        case manual
+        case liveSync
+    }
+
+    private func writePendingChanges(source: WriteSource) {
         if case .demo = mode {
             dirtyControls.removeAll()
             dirtyLightingLayers.removeAll()
@@ -185,13 +199,19 @@ final class AppModel: ObservableObject {
             return
         }
 
+        guard !isWritingConfiguration else { return }
+        let pendingControls = dirtyControls
+        let pendingLightingLayers = dirtyLightingLayers
+        guard !pendingControls.isEmpty || !pendingLightingLayers.isEmpty else { return }
         guard case .hardware(let connected) = mode else { return }
         guard connected.isConfigurable else {
             notice = Notice(kind: .warning, message: "This connection cannot apply changes.")
             return
         }
+        isWritingConfiguration = true
         do {
-            for location in dirtyControls.sorted(by: { $0.id < $1.id }) {
+            for location in pendingControls.sorted(by: { $0.id < $1.id }) {
+                guard configuration.layers.indices.contains(location.layer) else { continue }
                 guard let binding = configuration.layers[location.layer].bindings[location.control] else { continue }
                 let reports = try MacroPadProtocolEncoder.reports(
                     for: location.control,
@@ -202,7 +222,8 @@ final class AppModel: ObservableObject {
                 )
                 for report in reports { try hidService.write(report) }
             }
-            for layerIndex in dirtyLightingLayers.sorted() {
+            for layerIndex in pendingLightingLayers.sorted() {
+                guard configuration.layers.indices.contains(layerIndex) else { continue }
                 let reports = try MacroPadProtocolEncoder.lightingReport(
                     layer: layerIndex,
                     lighting: configuration.layers[layerIndex].lighting,
@@ -211,13 +232,15 @@ final class AppModel: ObservableObject {
                 )
                 for report in reports { try hidService.write(report) }
             }
-            dirtyControls.removeAll()
-            dirtyLightingLayers.removeAll()
-            notice = Notice(kind: .success, message: "Configuration written to \(connected.productName).")
+            dirtyControls.subtract(pendingControls)
+            dirtyLightingLayers.subtract(pendingLightingLayers)
+            notice = Notice(kind: .success, message: successMessage(for: source, deviceName: connected.productName))
             persistDraft()
         } catch {
-            notice = Notice(kind: .error, message: error.localizedDescription)
+            notice = Notice(kind: .error, message: errorMessage(for: source, error: error))
         }
+        isWritingConfiguration = false
+        syncPendingChangesIfNeeded()
     }
 
     func readFromDevice() {
@@ -237,12 +260,22 @@ final class AppModel: ObservableObject {
 
     func confirmReadFromDevice() {
         showingReadReview = false
-        guard case .hardware(let connected) = mode, canReadFromDevice else { return }
+        guard case .hardware(let connected) = mode else { return }
+        loadConfigurationFromDevice(from: connected, automatic: false)
+    }
+
+    private func loadConfigurationFromDevice(from connected: ConnectedHIDDevice, automatic: Bool) {
+        guard canReadFromDevice else { return }
         isReadingConfiguration = true
-        notice = nil
+        notice = automatic
+            ? Notice(kind: .success, message: "Loading configuration from \(connected.productName)...")
+            : nil
 
         Task {
-            defer { isReadingConfiguration = false }
+            defer {
+                isReadingConfiguration = false
+                syncPendingChangesIfNeeded()
+            }
             do {
                 let reports = try await hidService.readConfigurationReports()
                 configuration = try MacroPadProtocolDecoder.applying(
@@ -283,6 +316,39 @@ final class AppModel: ObservableObject {
         selectedControl = .key(min(2, nextProfile.keyCount))
         dirtyControls.removeAll()
         dirtyLightingLayers.removeAll()
+        if let device, device.isConfigurable {
+            loadConfigurationFromDevice(from: device, automatic: true)
+        }
+    }
+
+    private func syncPendingChangesIfNeeded() {
+        guard changeCount > 0 else { return }
+        guard canWriteToDevice else {
+            if isHardwareConnected {
+                notice = Notice(kind: .warning, message: "Changes are local only. Connect USB to store them.")
+            }
+            return
+        }
+        guard !isReadingConfiguration, !isWritingConfiguration else { return }
+        Task { writePendingChanges(source: .liveSync) }
+    }
+
+    private func successMessage(for source: WriteSource, deviceName: String) -> String {
+        switch source {
+        case .manual:
+            return "Configuration written to \(deviceName)."
+        case .liveSync:
+            return "Synced changes to \(deviceName)."
+        }
+    }
+
+    private func errorMessage(for source: WriteSource, error: Error) -> String {
+        switch source {
+        case .manual:
+            return error.localizedDescription
+        case .liveSync:
+            return "Sync failed: \(error.localizedDescription)"
+        }
     }
 
     private func persistDraft() {

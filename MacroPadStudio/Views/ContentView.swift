@@ -77,14 +77,20 @@ private struct StatusBarView: View {
             Text(model.connectionDetail)
                 .foregroundStyle(.secondary)
             Spacer()
-            if model.changeCount > 0 {
-                Label(changeLabel, systemImage: "circle.fill")
-                    .symbolRenderingMode(.monochrome)
-                    .foregroundStyle(.orange)
+            if model.isWritingConfiguration {
+                Label("Syncing to device...", systemImage: "arrow.triangle.2.circlepath")
+                    .foregroundStyle(.blue)
+            } else if model.isReadingConfiguration {
+                Label("Loading from device...", systemImage: "arrow.down.to.line")
+                    .foregroundStyle(.blue)
             } else if let notice = model.notice {
                 Label(notice.message, systemImage: noticeSymbol(for: notice.kind))
                     .foregroundStyle(noticeColor(for: notice.kind))
                     .lineLimit(1)
+            } else if model.changeCount > 0 {
+                Label(changeLabel, systemImage: "circle.fill")
+                    .symbolRenderingMode(.monochrome)
+                    .foregroundStyle(.orange)
             } else {
                 Label("Up to date", systemImage: "checkmark.circle.fill")
                     .foregroundStyle(.green)
@@ -98,6 +104,9 @@ private struct StatusBarView: View {
     }
 
     private var statusTitle: String {
+        if model.isWritingConfiguration { return "Syncing configuration" }
+        if model.isReadingConfiguration { return "Loading configuration" }
+        if model.changeCount > 0 { return "Pending changes" }
         if model.canWriteToDevice { return "Configuration ready" }
         if model.isHardwareConnected { return "Bluetooth device detected" }
         return "Demo mode"

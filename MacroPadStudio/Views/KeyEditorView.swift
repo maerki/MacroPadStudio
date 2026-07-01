@@ -38,8 +38,6 @@ struct KeyEditorView: View {
             }
 
             Spacer()
-
-            DeviceActionButtons()
         }
         .padding(.horizontal, 30)
         .padding(.top, 20)
@@ -113,100 +111,13 @@ struct KeyEditorView: View {
     }
 }
 
-private struct DeviceActionButtons: View {
-    @EnvironmentObject private var model: AppModel
-
-    var body: some View {
-        HStack(spacing: 10) {
-            Button {
-                model.readFromDevice()
-            } label: {
-                if model.isReadingConfiguration {
-                    ProgressView()
-                        .controlSize(.small)
-                        .frame(width: 17, height: 17)
-                } else {
-                    Image(systemName: "arrow.down.to.line")
-                        .font(.system(size: 17, weight: .medium))
-                }
-            }
-            .buttonStyle(DeviceActionButtonStyle(kind: .secondary))
-            .disabled(!model.canReadFromDevice)
-            .help(model.isReadingConfiguration ? "Reading configuration..." : "Read control assignments from the keypad")
-            .accessibilityLabel("Read from Device")
-
-            Button {
-                model.requestApply()
-            } label: {
-                Image(systemName: "arrow.up.to.line")
-                    .font(.system(size: 17, weight: .medium))
-            }
-            .buttonStyle(DeviceActionButtonStyle(kind: .primary))
-            .disabled(!model.canApply)
-            .help(applyHelp)
-            .accessibilityLabel("Apply to Device")
-        }
-    }
-
-    private var applyHelp: String {
-        if model.canApply { return "Review and apply \(model.changeCount) changes" }
-        if model.changeCount > 0 { return "This connection cannot apply changes" }
-        return "No changes to apply"
-    }
-}
-
-private struct DeviceActionButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    enum Kind {
-        case primary
-        case secondary
-    }
-
-    let kind: Kind
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .frame(width: 34, height: 34)
-            .foregroundStyle(foregroundColor)
-            .background(backgroundColor(for: configuration), in: Circle())
-            .opacity(isEnabled ? (configuration.isPressed ? 0.72 : 1) : 0.45)
-    }
-
-    private var foregroundColor: Color {
-        switch kind {
-        case .primary: .white
-        case .secondary: .primary
-        }
-    }
-
-    private func backgroundColor(for configuration: Configuration) -> Color {
-        switch kind {
-        case .primary:
-            configuration.isPressed ? Color.accentColor.opacity(0.82) : Color.accentColor
-        case .secondary:
-            configuration.isPressed
-                ? Color(nsColor: .controlAccentColor).opacity(0.18)
-                : Color(nsColor: .controlBackgroundColor)
-        }
-    }
-}
-
 private struct BehaviorSummary: View {
     @EnvironmentObject private var model: AppModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Behavior")
-                    .font(.headline)
-                Spacer()
-                Button {
-                    model.resetSelectedControl()
-                } label: {
-                    Label("Reset Control", systemImage: "arrow.counterclockwise")
-                }
-            }
+            Text("Behavior")
+                .font(.headline)
 
             Label("Runs once when the control is pressed", systemImage: "hand.tap")
                 .fontWeight(.medium)
@@ -310,15 +221,17 @@ private struct MacroSequenceEditor: View {
             .overlay(RoundedRectangle(cornerRadius: 10).stroke(.separator.opacity(0.45)))
 
             HStack {
-                Stepper(value: delayBinding, in: 0...5_000, step: 10) {
-                    HStack {
-                        Text("Inter-key delay")
-                        Text("\(model.selectedBinding.interKeyDelayMilliseconds) ms")
-                            .monospacedDigit()
-                            .foregroundStyle(.secondary)
+                if model.selectedBinding.sequence.count > 1 {
+                    Stepper(value: delayBinding, in: 0...5_000, step: 10) {
+                        HStack {
+                            Text("Inter-key delay")
+                            Text("\(model.selectedBinding.interKeyDelayMilliseconds) ms")
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
                     }
+                    .disabled(!model.profile.supportsDelay)
                 }
-                .disabled(!model.profile.supportsDelay)
                 Spacer()
                 Text("\(model.selectedBinding.sequence.count) of \(model.profile.maxSequenceLength) keystrokes")
                     .font(.caption)
@@ -372,7 +285,10 @@ private struct KeystrokeRow: View {
 
             Menu {
                 Picker("Key", selection: keyBinding) {
-                    ForEach(HIDKey.allCases) { key in Text(key.displayName).tag(key) }
+                    ForEach(HIDKey.allCases) { key in
+                        HIDKeyLabel(key: key)
+                            .tag(key)
+                    }
                 }
                 Divider()
                 Toggle("Command", isOn: modifierBinding(.leftCommand))
@@ -418,6 +334,18 @@ private struct KeystrokeRow: View {
         model.updateSelectedBinding { binding in
             guard let index = binding.sequence.firstIndex(where: { $0.id == stroke.id }) else { return }
             mutate(&binding.sequence[index])
+        }
+    }
+}
+
+private struct HIDKeyLabel: View {
+    let key: HIDKey
+
+    var body: some View {
+        if let symbolName = key.symbolName {
+            Label(key.displayName, systemImage: symbolName)
+        } else {
+            Text(key.displayName)
         }
     }
 }

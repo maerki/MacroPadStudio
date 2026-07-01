@@ -128,7 +128,7 @@ enum HIDKeyboardEventTranslator {
 
     private static let keysByMacKeyCode: [UInt16: HIDKey] = [
         0: .a, 1: .s, 2: .d, 3: .f, 4: .h, 5: .g, 6: .z, 7: .x,
-        8: .c, 9: .v, 11: .b, 12: .q, 13: .w, 14: .e, 15: .r,
+        8: .c, 9: .v, 10: .nonUSBackslash, 11: .b, 12: .q, 13: .w, 14: .e, 15: .r,
         16: .y, 17: .t, 18: .one, 19: .two, 20: .three, 21: .four,
         22: .six, 23: .five, 24: .equal, 25: .nine, 26: .seven,
         27: .minus, 28: .eight, 29: .zero, 30: .rightBracket, 31: .o,
@@ -136,9 +136,17 @@ enum HIDKeyboardEventTranslator {
         37: .l, 38: .j, 39: .quote, 40: .k, 41: .semicolon,
         42: .backslash, 43: .comma, 44: .slash, 45: .n, 46: .m,
         47: .period, 48: .tab, 49: .space, 50: .grave, 51: .backspace,
-        53: .escape, 57: .capsLock, 96: .f5, 97: .f6, 98: .f7,
-        99: .f3, 100: .f8, 101: .f9, 103: .f11, 109: .f10,
-        111: .f12, 115: .home, 116: .pageUp, 117: .delete,
+        53: .escape, 57: .capsLock, 64: .f17, 65: .keypadPeriod,
+        67: .keypadAsterisk, 69: .keypadPlus, 71: .keypadNumLock,
+        75: .keypadSlash, 76: .keypadEnter, 78: .keypadMinus,
+        79: .f18, 80: .f19, 81: .keypadEqual, 82: .keypadZero,
+        83: .keypadOne, 84: .keypadTwo, 85: .keypadThree,
+        86: .keypadFour, 87: .keypadFive, 88: .keypadSix,
+        89: .keypadSeven, 91: .keypadEight, 92: .keypadNine,
+        96: .f5, 97: .f6, 98: .f7,
+        99: .f3, 100: .f8, 101: .f9, 103: .f11, 105: .f13,
+        106: .f16, 107: .f14, 109: .f10, 111: .f12, 113: .f15,
+        114: .insert, 115: .home, 116: .pageUp, 117: .delete,
         118: .f4, 119: .end, 120: .f2, 121: .pageDown, 122: .f1,
         123: .leftArrow, 124: .rightArrow, 125: .downArrow, 126: .upArrow
     ]

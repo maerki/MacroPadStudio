@@ -132,6 +132,11 @@ enum HIDKey: UInt8, CaseIterable, Codable, Hashable, Sendable, Identifiable {
     case semicolon = 51, quote, grave, comma, period, slash, capsLock
     case f1 = 58, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12
     case printScreen = 70, scrollLock, pause, insert, home, pageUp, delete, end, pageDown, rightArrow, leftArrow, downArrow, upArrow
+    case keypadNumLock = 83, keypadSlash, keypadAsterisk, keypadMinus, keypadPlus, keypadEnter
+    case keypadOne = 89, keypadTwo, keypadThree, keypadFour, keypadFive, keypadSix, keypadSeven, keypadEight, keypadNine, keypadZero, keypadPeriod
+    case nonUSBackslash = 100
+    case keypadEqual = 103
+    case f13 = 104, f14, f15, f16, f17, f18, f19
 
     var id: UInt8 { rawValue }
 
@@ -150,6 +155,26 @@ enum HIDKey: UInt8, CaseIterable, Codable, Hashable, Sendable, Identifiable {
         case .pageDown: "Page Down"
         case .capsLock: "Caps Lock"
         case .printScreen: "Screenshot"
+        case .scrollLock: "Scroll Lock"
+        case .nonUSBackslash: "§"
+        case .keypadNumLock: "Keypad Clear"
+        case .keypadSlash: "Keypad /"
+        case .keypadAsterisk: "Keypad *"
+        case .keypadMinus: "Keypad -"
+        case .keypadPlus: "Keypad +"
+        case .keypadEnter: "Keypad Enter"
+        case .keypadOne: "Keypad 1"
+        case .keypadTwo: "Keypad 2"
+        case .keypadThree: "Keypad 3"
+        case .keypadFour: "Keypad 4"
+        case .keypadFive: "Keypad 5"
+        case .keypadSix: "Keypad 6"
+        case .keypadSeven: "Keypad 7"
+        case .keypadEight: "Keypad 8"
+        case .keypadNine: "Keypad 9"
+        case .keypadZero: "Keypad 0"
+        case .keypadPeriod: "Keypad ."
+        case .keypadEqual: "Keypad ="
         default: String(describing: self).replacingOccurrences(of: "Key", with: "").uppercased()
         }
     }

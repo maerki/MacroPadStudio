@@ -102,7 +102,8 @@ This creates an ad-hoc-signed archive at
 `outputs/MacroPad-Studio-macOS.zip` plus a SHA-256 checksum. Version `0.1.0`
 is distributed as an explicitly marked, non-notarized pre-release build and
 may be blocked by Gatekeeper. A normal public release requires a Developer ID
-signature and Apple notarization; see [Releasing](docs/RELEASING.md).
+signature and Apple notarization through `./Scripts/package-notarized.sh`;
+see [Releasing](docs/RELEASING.md).
 
 ## Project structure
 

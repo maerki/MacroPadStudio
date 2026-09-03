@@ -60,6 +60,7 @@ Before writing to hardware, confirm that macOS reports USB VID:PID
 - Three-key, one-knob editor with three configuration layers.
 - Keyboard sequences, media controls, mouse actions, and layer lighting.
 - Full configuration reading for the validated `1189:8840` device.
+- Battery percentage when macOS publishes it through the connected device's HID interface.
 - Reviewable change list before any hardware write.
 - Local JSON drafts stored in Application Support.
 - Interactive demo mode when no supported USB device is connected.
@@ -106,6 +107,11 @@ the validated USB configuration interface. On the observed BLE
 `MINI_KEYBOARD`, macOS exposes only the standard keyboard/mouse/consumer HID
 endpoint (`1452:022C`, max output report size 2), not the 65-byte vendor
 configuration reports used over USB.
+
+If a device declares the standard HID `Battery Strength` control, MacroPad
+Studio displays its percentage. The app never probes undocumented reports to
+discover battery state, so devices that do not declare this control simply
+show no battery percentage.
 
 ## Safety model
 

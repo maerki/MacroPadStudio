@@ -8,6 +8,10 @@ the first public version is tagged.
 
 ## [Unreleased]
 
+### Added
+
+- Keep the app running in the menu bar after its last editor window closes, with a Settings toggle to restore normal quit-on-close behavior.
+
 ## [0.1.0] - 2026-06-21
 
 ### Added

@@ -11,10 +11,13 @@
 		1A11622EDE5DDD941C3E5F51 /* HardwareWriteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FA39EBA6FE4A0070BEEC14 /* HardwareWriteTests.swift */; };
 		2444E516A819175FF71FAA6A /* MacroPadProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 642F0738BD8E8309E618DDAA /* MacroPadProtocolTests.swift */; };
 		2F4FFDAA790DE5B0896D9161 /* HIDDeviceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002E371E092F17FA104F12EE /* HIDDeviceService.swift */; };
+		2F5E1DD685407AC77C4597AA /* BackgroundMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B173DCAAF861D22655A48F /* BackgroundMenuView.swift */; };
+		3F9935380AA05B503801EED0 /* AppLifecycleControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDCA37D28CF890BFD9CEB0 /* AppLifecycleControllerTests.swift */; };
 		47E194EE050E0C5DE442801E /* MacroPadProtocolDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5429C246173AD4CBBA5CD445 /* MacroPadProtocolDecoder.swift */; };
 		649D512AE6E0E1A78CD64681 /* MacroPadStudioApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06B4ABEBB6CE655C9B5807BA /* MacroPadStudioApp.swift */; };
 		6800C5BA5521219A4179BE44 /* ConfigurationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 508E5D483C627B1B5B4C495D /* ConfigurationStore.swift */; };
 		6E28DFBF5A0145BE548DB56A /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77995E033A9ADC681A64B15F /* InspectorView.swift */; };
+		70FEBB11BB0DF9A94435D961 /* AppLifecycleController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7F2AF115ACE273CDFCAD11 /* AppLifecycleController.swift */; };
 		72B466AAF3BFA834E098F134 /* ConfigurationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7FEAC8C6BE04058B35C9B30 /* ConfigurationStoreTests.swift */; };
 		77828B4039CC98A370E21157 /* DeviceCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FB5C5F51299F19CF9F885F /* DeviceCanvasView.swift */; };
 		7A623176ED8BF1609399A65A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 853B681E8D2BB8510E32D5EE /* Assets.xcassets */; };
@@ -39,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		002E371E092F17FA104F12EE /* HIDDeviceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HIDDeviceService.swift; sourceTree = "<group>"; };
+		05B173DCAAF861D22655A48F /* BackgroundMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundMenuView.swift; sourceTree = "<group>"; };
 		06B4ABEBB6CE655C9B5807BA /* MacroPadStudioApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroPadStudioApp.swift; sourceTree = "<group>"; };
 		430E15AEA547BC84F4CD5492 /* MacroPadStudioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MacroPadStudioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4904B89CC09CFBB4EBE8CD11 /* VisualSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualSnapshotTests.swift; sourceTree = "<group>"; };
@@ -47,6 +51,7 @@
 		5429C246173AD4CBBA5CD445 /* MacroPadProtocolDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroPadProtocolDecoder.swift; sourceTree = "<group>"; };
 		642F0738BD8E8309E618DDAA /* MacroPadProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroPadProtocolTests.swift; sourceTree = "<group>"; };
 		670C44B875055CDC1AC60ADD /* KeystrokeRecorderField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeystrokeRecorderField.swift; sourceTree = "<group>"; };
+		6D7F2AF115ACE273CDFCAD11 /* AppLifecycleController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleController.swift; sourceTree = "<group>"; };
 		77995E033A9ADC681A64B15F /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		853B681E8D2BB8510E32D5EE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		89B3E93095FD6F45FE4FBB23 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,6 +60,7 @@
 		A7FEAC8C6BE04058B35C9B30 /* ConfigurationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationStoreTests.swift; sourceTree = "<group>"; };
 		C553015B8FD0F45578ADF968 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		DB571B24A67F015D3B1A00A3 /* MacroPadModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroPadModels.swift; sourceTree = "<group>"; };
+		DBCDCA37D28CF890BFD9CEB0 /* AppLifecycleControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleControllerTests.swift; sourceTree = "<group>"; };
 		DD15BE0FF928A5BBB6513079 /* KeyEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyEditorView.swift; sourceTree = "<group>"; };
 		DEE5D4716C3B31B898EC7856 /* MacroPadProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacroPadProtocol.swift; sourceTree = "<group>"; };
 		EE76D6C163E81D3812832377 /* MacroPadStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacroPadStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +70,7 @@
 		0759CA53CCF9F6B329AE7B00 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				05B173DCAAF861D22655A48F /* BackgroundMenuView.swift */,
 				89B3E93095FD6F45FE4FBB23 /* ContentView.swift */,
 				96FB5C5F51299F19CF9F885F /* DeviceCanvasView.swift */,
 				77995E033A9ADC681A64B15F /* InspectorView.swift */,
@@ -94,6 +101,7 @@
 		2BEB36696F52FAE1F33F7FDA /* MacroPadStudioTests */ = {
 			isa = PBXGroup;
 			children = (
+				DBCDCA37D28CF890BFD9CEB0 /* AppLifecycleControllerTests.swift */,
 				A7FEAC8C6BE04058B35C9B30 /* ConfigurationStoreTests.swift */,
 				A1FA39EBA6FE4A0070BEEC14 /* HardwareWriteTests.swift */,
 				51D94B58C24B064697D086D9 /* KeystrokeRecorderTests.swift */,
@@ -144,6 +152,7 @@
 		B1F51C9F3C88D82902E1E1A3 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				6D7F2AF115ACE273CDFCAD11 /* AppLifecycleController.swift */,
 				06B4ABEBB6CE655C9B5807BA /* MacroPadStudioApp.swift */,
 			);
 			path = App;
@@ -259,7 +268,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70FEBB11BB0DF9A94435D961 /* AppLifecycleController.swift in Sources */,
 				8BE0AC62131B9A9C60D49AA0 /* AppModel.swift in Sources */,
+				2F5E1DD685407AC77C4597AA /* BackgroundMenuView.swift in Sources */,
 				6800C5BA5521219A4179BE44 /* ConfigurationStore.swift in Sources */,
 				9FAEB7A4BBD9E0F61D06842E /* ContentView.swift in Sources */,
 				77828B4039CC98A370E21157 /* DeviceCanvasView.swift in Sources */,
@@ -278,6 +289,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F9935380AA05B503801EED0 /* AppLifecycleControllerTests.swift in Sources */,
 				72B466AAF3BFA834E098F134 /* ConfigurationStoreTests.swift in Sources */,
 				1A11622EDE5DDD941C3E5F51 /* HardwareWriteTests.swift in Sources */,
 				F51B808C9E1163D3DC19F5BA /* KeystrokeRecorderTests.swift in Sources */,

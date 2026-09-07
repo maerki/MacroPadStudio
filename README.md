@@ -63,6 +63,7 @@ Before writing to hardware, confirm that macOS reports USB VID:PID
 - Battery percentage when macOS publishes it through the connected device's HID interface.
 - Reviewable change list before any hardware write.
 - Local JSON drafts stored in Application Support.
+- Continues in the menu bar after the editor window closes; this is enabled by default and configurable in Settings.
 - Interactive demo mode when no supported USB device is connected.
 - No analytics, update checker, or network code.
 

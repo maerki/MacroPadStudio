@@ -8,6 +8,10 @@ the first public version is tagged.
 
 ## [Unreleased]
 
+### Added
+
+- Display the standard HID battery percentage when macOS publishes it for a connected macro pad.
+
 ## [0.1.0] - 2026-06-21
 
 ### Added
